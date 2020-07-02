@@ -93,7 +93,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }else{
                     mysqli_stmt_bind_param($stmt,"sssss",$fist,$last,$nick,$pass,$mail);
                     mysqli_stmt_execute($stmt);
-                    echo "<h3>"."Registration user with user name = ".$nick." Email khoi phuc tai khoan la " .$mail."</h3>";
+                    // get data
+                   $sql="SELECT * FROM user WHERE user_uid='$nick'";
+                   $result=mysqli_query($db,$sql);
+                   if(mysqli_num_rows($result)>0){
+                       while ($row=mysqli_fetch_assoc($result)){
+                           $idImg=$row['user_id'];
+                           $sql="INSERT INTO profileimg(user_id,status) VALUES ('$idImg',1)";
+                           mysqli_query($db,$sql);
+                           echo "<h3>"."Registration user with user name = ".$nick." Email khoi phuc tai khoan la " .$mail."</h3>";
+                       }
+                   }else{
+                       echo mysqli_error($db);
+                       echo "error!";
+                   }
                 }
                 echo mysqli_error($db);
             }
